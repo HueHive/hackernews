@@ -42,7 +42,7 @@ export default function Feed() {
   ];
 
   const handleSwipeComplete = (newIndex: number) => {
-    setCurrentIndex(newIndex);
+    setCurrentIndex(newIndex > 0 ? newIndex % 2 : 0);
   };
 
   console.log('check index', currentIndex);
