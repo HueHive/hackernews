@@ -1,35 +1,67 @@
-import { FlashList } from '@shopify/flash-list';
-import React from 'react';
+import React, { useState } from 'react';
+import { StyleSheet, View } from 'react-native';
 
-import type { Post } from '@/api';
-import { usePosts } from '@/api';
-import { Card } from '@/components/card';
-import { EmptyList, FocusAwareStatusBar, Text, View } from '@/components/ui';
+import NewsCard from './news-card';
 
 export default function Feed() {
-  const { data, isPending, isError } = usePosts();
-  const renderItem = React.useCallback(
-    ({ item }: { item: Post }) => <Card {...item} />,
-    [],
-  );
+  const [currentIndex, setCurrentIndex] = useState(0);
 
-  if (isError) {
-    return (
-      <View>
-        <Text> Error Loading data </Text>
-      </View>
-    );
-  }
+  // Sample data
+  const newsData = [
+    {
+      id: '1',
+      title: 'Sample News Title 1',
+      content:
+        'This is a sample news content that would appear in the Inshorts app...',
+      imageUrl: 'https://via.placeholder.com/400x200',
+      time: '15 minutes ago',
+      author: 'John Doe',
+      source: 'Sample News',
+    },
+    {
+      id: '2',
+      title: 'Sample News Title 2',
+      content:
+        'This is a sample news content that would appear in the Inshorts app...',
+      imageUrl: 'https://via.placeholder.com/400x200',
+      time: '20 minutes ago',
+      author: 'John Doe',
+      source: 'Sample News',
+    },
+    {
+      id: '3',
+      title: 'Sample News Title 3',
+      content:
+        'This is a sample news content that would appear in the Inshorts app...',
+      imageUrl: 'https://via.placeholder.com/400x200',
+      time: '30 minutes ago',
+      author: 'John Doe',
+      source: 'Sample News',
+    },
+    // Add more news items here
+  ];
+
+  const handleSwipeComplete = (newIndex: number) => {
+    setCurrentIndex(newIndex > 0 ? newIndex % 2 : 0);
+  };
+
+  console.log('check index', currentIndex);
+
   return (
-    <View className="flex-1 ">
-      <FocusAwareStatusBar />
-      <FlashList
-        data={data}
-        renderItem={renderItem}
-        keyExtractor={(_, index) => `item-${index}`}
-        ListEmptyComponent={<EmptyList isLoading={isPending} />}
-        estimatedItemSize={300}
+    <View style={styles.container}>
+      return (
+      <NewsCard
+        data={newsData[currentIndex]}
+        index={currentIndex}
+        onSwipeComplete={handleSwipeComplete}
       />
+      );
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+});
