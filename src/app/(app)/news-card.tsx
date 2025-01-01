@@ -47,7 +47,7 @@ const NewsCard = ({ data, index, onSwipeComplete }: NewsCardProps) => {
     onPanResponderRelease: (_, gesture) => {
       if (gesture.dy < -50 && direction === 'top') {
         Animated.timing(position, {
-          toValue: { x: 0, y: SCREEN_HEIGHT },
+          toValue: { x: 0, y: -SCREEN_HEIGHT },
           duration: 500,
           useNativeDriver: true,
         }).start(() => {
@@ -56,7 +56,7 @@ const NewsCard = ({ data, index, onSwipeComplete }: NewsCardProps) => {
         });
       } else if (gesture.dy > 50 && direction === 'bottom') {
         Animated.timing(position, {
-          toValue: { x: 0, y: -SCREEN_HEIGHT },
+          toValue: { x: 0, y: SCREEN_HEIGHT },
           duration: 500,
           useNativeDriver: true,
         }).start(() => {
