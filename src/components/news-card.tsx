@@ -9,13 +9,11 @@ import {
   View,
 } from 'react-native';
 
-import { type News } from './types';
-
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 const SCREEN_WIDTH = Dimensions.get('window').width;
-const CARD_HEIGHT = SCREEN_HEIGHT * 0.8;
+const CARD_HEIGHT = SCREEN_HEIGHT;
 interface NewsCardProps {
-  data: News;
+  data: any;
   index: number;
   onSwipeComplete: (index: number) => void;
 }
@@ -129,6 +127,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     top: 0,
+    flex: 1,
   },
   image: {
     height: CARD_HEIGHT * 0.4,
