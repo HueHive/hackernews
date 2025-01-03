@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 
-import NewsCard from './news-card';
+import NewsCard from '@/components/news-card';
 
 export default function Feed() {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -63,5 +63,6 @@ export default function Feed() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    display: 'flex',
   },
 });
