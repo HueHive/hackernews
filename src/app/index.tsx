@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { Dimensions, StyleSheet, View } from 'react-native';
 
 import NewsCard from '@/components/news-card';
+import Swappable from '@/components/swappable/swappable';
 
 export default function Feed() {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -40,22 +41,37 @@ export default function Feed() {
     },
     // Add more news items here
   ];
-
-  const handleSwipeComplete = (newIndex: number) => {
-    setCurrentIndex(newIndex > 0 ? newIndex % 2 : 0);
-  };
-
-  console.log('check index', currentIndex);
-
+  let currentIndexInRange = currentIndex < 0 ? 0 : currentIndex;
+  currentIndexInRange =
+    currentIndexInRange >= newsData.length
+      ? newsData.length - 1
+      : currentIndexInRange;
+  console.log({ currentIndexInRange });
   return (
     <View style={styles.container}>
-      return (
-      <NewsCard
-        data={newsData[currentIndex]}
-        index={currentIndex}
-        onSwipeComplete={handleSwipeComplete}
-      />
-      );
+      <Swappable
+        onLeftSwipe={() => {
+          console.log('Swipe left');
+          setCurrentIndex(currentIndexInRange - 1);
+        }}
+        onRightSwipe={() => {
+          setCurrentIndex(currentIndexInRange + 1);
+          console.log('Swipe right ');
+        }}
+        onTopSwipe={() => {
+          console.log('swipe top');
+          setCurrentIndex(currentIndexInRange - 1);
+        }}
+        onBottomSwipe={() => {
+          console.log('bottom swipe');
+          setCurrentIndex(currentIndexInRange + 1);
+        }}
+        style={styles.card}
+      >
+        {' '}
+        <NewsCard data={newsData[currentIndexInRange]} />
+      </Swappable>
+      return ( );
     </View>
   );
 }
@@ -64,5 +80,23 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     display: 'flex',
+  },
+  card: {
+    height: Dimensions.get('window').height,
+    backgroundColor: 'white',
+    borderRadius: 10,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    flex: 1,
   },
 });
