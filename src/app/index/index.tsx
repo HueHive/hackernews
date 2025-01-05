@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { Dimensions, StyleSheet, View } from 'react-native';
 
-import NewsCard from '@/components/news-card';
+import NewsCard from '@/app/index/news-card';
 import Swappable from '@/components/swappable/swappable';
 
-export default function Feed() {
+export default function Home() {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   // Sample data
@@ -71,7 +71,6 @@ export default function Feed() {
         {' '}
         <NewsCard data={newsData[currentIndexInRange]} />
       </Swappable>
-      return ( );
     </View>
   );
 }
