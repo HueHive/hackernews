@@ -52,6 +52,7 @@ export interface SwappableProps {
   onTopSwipe: Function;
   onBottomSwipe: Function;
   style?: StyleProp<ViewStyle>;
+  className?: string;
 }
 const Swappable = function ({
   children,
@@ -60,6 +61,7 @@ const Swappable = function ({
   onTopSwipe,
   onBottomSwipe,
   style,
+  className,
 }: SwappableProps) {
   const [swipeDirection, setSwipeDirection] = useState<
     'right' | 'left' | 'top' | 'bottom' | undefined
@@ -73,11 +75,8 @@ const Swappable = function ({
         swipeDirection === undefined
       ) {
         if (gesture.dx < -20) setSwipeDirection('left');
-
         if (gesture.dx > 20) setSwipeDirection('right');
-
         if (gesture.dy < -20) setSwipeDirection('top');
-
         if (gesture.dy > 20) setSwipeDirection('bottom');
       }
       position.setValue(
@@ -118,6 +117,7 @@ const Swappable = function ({
       {...panResponder.panHandlers}
       style={[style, cardStyle]}
       testID="swappable"
+      className={className}
     >
       {children}
     </Animated.View>

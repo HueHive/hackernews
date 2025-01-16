@@ -2,15 +2,22 @@ import { useQuery } from '@tanstack/react-query';
 import React from 'react';
 import {
   ActivityIndicator,
-  Dimensions,
   Image,
-  StyleSheet,
   Text,
+  TouchableOpacity,
   View,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
-const SCREEN_HEIGHT = Dimensions.get('window').height;
-const CARD_HEIGHT = SCREEN_HEIGHT;
+const dummyStory = `In a quiet village, nestled between rolling 
+green hills, lived a little boy named Arjun. One day, 
+his grandmother handed him a small, shiny seed and said,
+ "Plant this, water it every day, and watch what happens.
+ In a quiet village, nestled between rolling 
+green hills, lived a little boy named Arjun. One day, 
+his grandmother handed him a small, shiny seed and said,
+ "Plant this, water it every day, and watch what happens.
+ `;
 interface NewsCardProps {
   newsId: number;
 }
@@ -22,7 +29,7 @@ const NewsCard = ({ newsId }: NewsCardProps) => {
         `https://hacker-news.firebaseio.com//v0/item/${newsId}.json?print=pretty`,
       ).then((res) => res.json()),
   });
-  console.log('data', { data });
+
   if (isLoading) {
     return <ActivityIndicator />;
   }
@@ -33,68 +40,29 @@ const NewsCard = ({ newsId }: NewsCardProps) => {
       </View>
     );
   }
+  console.log(data);
 
   return (
-    <>
+    <SafeAreaView className={`flex flex-1`}>
       <Image
         source={{ uri: 'https://via.placeholder.com/400x200' }}
-        style={styles.image}
+        className={`h-2/5 w-full`}
       />
-      <View style={styles.contentContainer}>
-        <Text style={styles.title}>{data.title}</Text>
-        <Text style={styles.time}>{data.type}</Text>
-        <Text style={styles.content}>{data.story}</Text>
-        <View style={styles.sourceContainer}>
-          <Text style={styles.source}>short by </Text>
-          <Text style={styles.divider}>|</Text>
-          <Text style={styles.source}>{data.source}</Text>
+      <View className={'flex flex-1 p-4'}>
+        <Text>{data.title} </Text>
+        <View>
+          <Text>{data.story || dummyStory}</Text>
+        </View>
+        <View className="flex flex-row items-center">
+          <Text>Create by </Text>
+          <Text>|</Text>
+          <Text>{data.by}</Text>
+          <TouchableOpacity onPress={() => {}}></TouchableOpacity>
+          <Text>{'100'}</Text>
         </View>
       </View>
-    </>
+    </SafeAreaView>
   );
 };
-
-const styles = StyleSheet.create({
-  image: {
-    height: CARD_HEIGHT * 0.4,
-    width: '100%',
-    borderTopLeftRadius: 10,
-    borderTopRightRadius: 10,
-  },
-  contentContainer: {
-    padding: 15,
-    flex: 1,
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginBottom: 10,
-  },
-  time: {
-    color: '#666',
-    fontSize: 12,
-    marginBottom: 15,
-  },
-  content: {
-    fontSize: 16,
-    lineHeight: 24,
-    color: '#444',
-  },
-  sourceContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    position: 'absolute',
-    bottom: 15,
-    left: 15,
-  },
-  source: {
-    fontSize: 12,
-    color: '#666',
-  },
-  divider: {
-    marginHorizontal: 5,
-    color: '#666',
-  },
-});
 
 export default NewsCard;
