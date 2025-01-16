@@ -28,22 +28,39 @@ const getAnimationCoordinate = function (
       return { x: 0, y: 0 };
   }
 };
-interface SwappableProps {
+
+const getPositionBaseOnSwipeDirection = function (
+  gesture: PanResponderGestureState,
+  swipeDirection: 'left' | 'right' | 'top' | 'bottom' | undefined,
+) {
+  switch (swipeDirection) {
+    case 'top':
+    case 'bottom':
+      return { x: 0, y: gesture.dy };
+
+    case 'left':
+    case 'right':
+      return { x: gesture.dx, y: 0 };
+    default:
+      return { x: gesture.dx, y: gesture.dy };
+  }
+};
+export interface SwappableProps {
   children: ReactNode;
   onLeftSwipe: Function;
   onRightSwipe: Function;
   onTopSwipe: Function;
   onBottomSwipe: Function;
-  style: StyleProp<ViewStyle>;
+  style?: StyleProp<ViewStyle>;
 }
-const Swappable = ({
+const Swappable = function ({
   children,
   onLeftSwipe,
   onRightSwipe,
   onTopSwipe,
   onBottomSwipe,
   style,
-}: SwappableProps) => {
+}: SwappableProps) {
   const [swipeDirection, setSwipeDirection] = useState<
     'right' | 'left' | 'top' | 'bottom' | undefined
   >();
@@ -63,12 +80,9 @@ const Swappable = ({
 
         if (gesture.dy > 20) setSwipeDirection('bottom');
       }
-      if (swipeDirection === 'top') position.setValue({ x: 0, y: gesture.dy });
-      if (swipeDirection === 'bottom')
-        position.setValue({ x: 0, y: gesture.dy });
-      if (swipeDirection === 'left') position.setValue({ x: gesture.dx, y: 0 });
-      if (swipeDirection === 'right')
-        position.setValue({ x: gesture.dx, y: 0 });
+      position.setValue(
+        getPositionBaseOnSwipeDirection(gesture, swipeDirection),
+      );
     },
     onPanResponderRelease: (_, gesture) => {
       return Animated.timing(position, {
@@ -100,7 +114,11 @@ const Swappable = ({
   };
 
   return (
-    <Animated.View {...panResponder.panHandlers} style={[style, cardStyle]}>
+    <Animated.View
+      {...panResponder.panHandlers}
+      style={[style, cardStyle]}
+      testID="swappable"
+    >
       {children}
     </Animated.View>
   );

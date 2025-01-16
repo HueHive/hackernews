@@ -1,75 +1,52 @@
+import { useQuery } from '@tanstack/react-query';
 import React, { useState } from 'react';
-import { Dimensions, StyleSheet, View } from 'react-native';
+import { Dimensions, StyleSheet, Text, View } from 'react-native';
 
 import NewsCard from '@/app/index/news-card';
 import Swappable from '@/components/swappable/swappable';
 
 export default function Home() {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const { data } = useQuery({
+    queryKey: ['topStories'],
+    queryFn: () =>
+      fetch(
+        'https://hacker-news.firebaseio.com/v0/topstories.json?print=pretty',
+      ).then((res) => res.json()),
+  });
 
-  // Sample data
-  const newsData = [
-    {
-      id: '1',
-      title: 'Sample News Title 1',
-      content:
-        'This is a sample news content that would appear in the Inshorts app...',
-      imageUrl: 'https://via.placeholder.com/400x200',
-      time: '15 minutes ago',
-      author: 'John Doe',
-      source: 'Sample News',
-    },
-    {
-      id: '2',
-      title: 'Sample News Title 2',
-      content:
-        'This is a sample news content that would appear in the Inshorts app...',
-      imageUrl: 'https://via.placeholder.com/400x200',
-      time: '20 minutes ago',
-      author: 'John Doe',
-      source: 'Sample News',
-    },
-    {
-      id: '3',
-      title: 'Sample News Title 3',
-      content:
-        'This is a sample news content that would appear in the Inshorts app...',
-      imageUrl: 'https://via.placeholder.com/400x200',
-      time: '30 minutes ago',
-      author: 'John Doe',
-      source: 'Sample News',
-    },
-    // Add more news items here
-  ];
-  let currentIndexInRange = currentIndex < 0 ? 0 : currentIndex;
-  currentIndexInRange =
-    currentIndexInRange >= newsData.length
-      ? newsData.length - 1
-      : currentIndexInRange;
-  console.log({ currentIndexInRange });
+  const topStories = data || [];
+
+  if (topStories.length === 0) {
+    return (
+      <View>
+        <Text>No data found</Text>
+      </View>
+    );
+  }
   return (
     <View style={styles.container}>
       <Swappable
         onLeftSwipe={() => {
-          console.log('Swipe left');
-          setCurrentIndex(currentIndexInRange - 1);
+          // console.log('Swipe left');
+          // setCurrentIndex(currentIndexInRange - 1);
         }}
         onRightSwipe={() => {
-          setCurrentIndex(currentIndexInRange + 1);
-          console.log('Swipe right ');
+          // setCurrentIndex(currentIndexInRange + 1);
+          // console.log('Swipe right ');
         }}
         onTopSwipe={() => {
-          console.log('swipe top');
-          setCurrentIndex(currentIndexInRange - 1);
+          console.log('swipe top', currentIndex);
+          setCurrentIndex(currentIndex + 1);
         }}
         onBottomSwipe={() => {
-          console.log('bottom swipe');
-          setCurrentIndex(currentIndexInRange + 1);
+          console.log('bottom swipe', currentIndex);
+          setCurrentIndex(Math.max(currentIndex - 1, 0));
         }}
         style={styles.card}
       >
         {' '}
-        <NewsCard data={newsData[currentIndexInRange]} />
+        <NewsCard newsId={topStories[currentIndex]} />
       </Swappable>
     </View>
   );

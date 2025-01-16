@@ -1,21 +1,51 @@
+import { useQuery } from '@tanstack/react-query';
 import React from 'react';
-import { Dimensions, Image, StyleSheet, Text, View } from 'react-native';
+import {
+  ActivityIndicator,
+  Dimensions,
+  Image,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 const CARD_HEIGHT = SCREEN_HEIGHT;
 interface NewsCardProps {
-  data: any;
+  newsId: number;
 }
-const NewsCard = ({ data }: NewsCardProps) => {
+const NewsCard = ({ newsId }: NewsCardProps) => {
+  const { isLoading, error, data } = useQuery({
+    queryKey: [newsId],
+    queryFn: () =>
+      fetch(
+        `https://hacker-news.firebaseio.com//v0/item/${newsId}.json?print=pretty`,
+      ).then((res) => res.json()),
+  });
+  console.log('data', { data });
+  if (isLoading) {
+    return <ActivityIndicator />;
+  }
+  if (error) {
+    return (
+      <View>
+        <Text>{error.toString()}</Text>
+      </View>
+    );
+  }
+
   return (
     <>
-      <Image source={{ uri: data.imageUrl }} style={styles.image} />
+      <Image
+        source={{ uri: 'https://via.placeholder.com/400x200' }}
+        style={styles.image}
+      />
       <View style={styles.contentContainer}>
         <Text style={styles.title}>{data.title}</Text>
-        <Text style={styles.time}>{data.time}</Text>
-        <Text style={styles.content}>{data.content}</Text>
+        <Text style={styles.time}>{data.type}</Text>
+        <Text style={styles.content}>{data.story}</Text>
         <View style={styles.sourceContainer}>
-          <Text style={styles.source}>short by {data.author}</Text>
+          <Text style={styles.source}>short by </Text>
           <Text style={styles.divider}>|</Text>
           <Text style={styles.source}>{data.source}</Text>
         </View>
