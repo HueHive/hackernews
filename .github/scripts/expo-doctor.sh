@@ -4,6 +4,8 @@
 output=$(npx expo-doctor@latest 2>&1)
 exit_code=$?
 
+mkdir -p .expo
+
 # Output file location
 output_file=".expo/expo-doctor.md"
 {
