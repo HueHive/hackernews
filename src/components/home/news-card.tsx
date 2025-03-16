@@ -22,7 +22,11 @@ interface NewsCardProps {
   newsId: number;
 }
 const NewsCard = ({ newsId }: NewsCardProps) => {
-  const { isLoading, error, data } = useQuery({
+  const {
+    isLoading,
+    error,
+    data: news,
+  } = useQuery({
     queryKey: [newsId],
     queryFn: () =>
       fetch(
@@ -40,23 +44,22 @@ const NewsCard = ({ newsId }: NewsCardProps) => {
       </View>
     );
   }
-  console.log(data);
+  console.log(news);
 
   return (
     <SafeAreaView className={`flex flex-1`}>
       <Image
-        source={{ uri: 'https://via.placeholder.com/400x200' }}
-        className={`h-2/5 w-full`}
+        source={{ uri: 'https://placehold.co/300x200/png' }}
+        className={`h-1/3 w-full`}
       />
       <View className={'flex flex-1 p-4'}>
-        <Text>{data.title} </Text>
+        <Text className="text-xl">{news.title || 'Test title '} </Text>
         <View>
-          <Text>{data.story || dummyStory}</Text>
+          <Text>{news.story || dummyStory}</Text>
         </View>
         <View className="flex flex-row items-center">
-          <Text>Create by </Text>
-          <Text>|</Text>
-          <Text>{data.by}</Text>
+          <Text className="text-sm font-light">Create by: </Text>
+          <Text className="text">{news.by}</Text>
           <TouchableOpacity onPress={() => {}}></TouchableOpacity>
           <Text>{'100'}</Text>
         </View>
