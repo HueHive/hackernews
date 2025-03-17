@@ -13,7 +13,7 @@ export default function News() {
   return (
     <View style={{ flex: 1 }}>
       <WebView
-        source={{ uri: newsUrl }}
+        source={{ uri: newsUrl as string }}
         startInLoadingState={true}
         renderLoading={() => (
           <ActivityIndicator size="large" style={styles.loader} />

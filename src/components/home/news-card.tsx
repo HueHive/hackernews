@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import React from 'react';
+import React, { forwardRef, useImperativeHandle } from 'react';
 import {
   ActivityIndicator,
   Image,
@@ -21,7 +21,8 @@ his grandmother handed him a small, shiny seed and said,
 interface NewsCardProps {
   newsId: number;
 }
-const NewsCard = ({ newsId }: NewsCardProps) => {
+const NewsCard = forwardRef((props: NewsCardProps, ref) => {
+  const { newsId } = props;
   const {
     isLoading,
     error,
@@ -34,9 +35,14 @@ const NewsCard = ({ newsId }: NewsCardProps) => {
       ).then((res) => res.json()),
   });
 
+  useImperativeHandle(ref, () => ({
+    getData: () => news,
+  }));
+
   if (isLoading) {
     return <ActivityIndicator />;
   }
+
   if (error) {
     return (
       <View>
@@ -44,7 +50,6 @@ const NewsCard = ({ newsId }: NewsCardProps) => {
       </View>
     );
   }
-  console.log(news);
 
   return (
     <SafeAreaView className={`flex flex-1`}>
@@ -66,6 +71,6 @@ const NewsCard = ({ newsId }: NewsCardProps) => {
       </View>
     </SafeAreaView>
   );
-};
+});
 
 export default NewsCard;

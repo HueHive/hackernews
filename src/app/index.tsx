@@ -30,17 +30,11 @@ export default function Home() {
 
   return (
     <Swappable
-      onLeftSwipe={() => {
-        // console.log('Swipe left');
-        // setCurrentIndex(currentIndexInRange - 1);
-      }}
-      onRightSwipe={() => {
-        // setCurrentIndex(currentIndexInRange + 1);
-        // console.log('Swipe right ');
-        console.log('hellow man ');
+      onLeftSwipe={() => {}}
+      onRightSwipe={(childData: any) => {
         router.push({
           pathname: '/news',
-          params: { newsUrl: 'https://keepworking.github.io/nash/' },
+          params: { newsUrl: childData.url },
         });
       }}
       onTopSwipe={() => {
