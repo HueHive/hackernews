@@ -1,13 +1,14 @@
 import { useQuery } from '@tanstack/react-query';
+import { router } from 'expo-router';
 import React, { useState } from 'react';
-import { Text, View } from 'react-native';
+import { ActivityIndicator, Text, View } from 'react-native';
 
-import NewsCard from '@/app/index/news-card';
+import NewsCard from '@/components/home/news-card';
 import Swappable from '@/components/swappable/swappable';
 
 export default function Home() {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const { data } = useQuery({
+  const { data: topStories = [], isLoading } = useQuery({
     queryKey: ['topStories'],
     queryFn: () =>
       fetch(
@@ -15,7 +16,9 @@ export default function Home() {
       ).then((res) => res.json()),
   });
 
-  const topStories = data || [];
+  if (isLoading) {
+    return <ActivityIndicator size={'large'}></ActivityIndicator>;
+  }
 
   if (topStories.length === 0) {
     return (
@@ -27,20 +30,17 @@ export default function Home() {
 
   return (
     <Swappable
-      onLeftSwipe={() => {
-        // console.log('Swipe left');
-        // setCurrentIndex(currentIndexInRange - 1);
-      }}
-      onRightSwipe={() => {
-        // setCurrentIndex(currentIndexInRange + 1);
-        // console.log('Swipe right ');
+      onLeftSwipe={() => {}}
+      onRightSwipe={(childData: any) => {
+        router.push({
+          pathname: '/news',
+          params: { newsUrl: childData.url },
+        });
       }}
       onTopSwipe={() => {
-        console.log('swipe top', currentIndex);
         setCurrentIndex(currentIndex + 1);
       }}
       onBottomSwipe={() => {
-        console.log('bottom swipe', currentIndex);
         setCurrentIndex(Math.max(currentIndex - 1, 0));
       }}
       className="flex-1"

@@ -1,4 +1,9 @@
-import React, { type ReactNode, useState } from 'react';
+import React, {
+  type ReactElement,
+  type ReactNode,
+  useRef,
+  useState,
+} from 'react';
 import {
   Animated,
   Dimensions,
@@ -54,6 +59,11 @@ export interface SwappableProps {
   style?: StyleProp<ViewStyle>;
   className?: string;
 }
+
+type ChildRefType = {
+  getData: () => any;
+};
+
 const Swappable = function ({
   children,
   onLeftSwipe,
@@ -63,6 +73,7 @@ const Swappable = function ({
   style,
   className,
 }: SwappableProps) {
+  const childRef = useRef<ChildRefType>();
   const [swipeDirection, setSwipeDirection] = useState<
     'right' | 'left' | 'top' | 'bottom' | undefined
   >();
@@ -100,18 +111,17 @@ const Swappable = function ({
             onLeftSwipe();
             break;
           case 'right':
-            onRightSwipe();
+            const dataFromChild = childRef.current?.getData();
+            onRightSwipe(dataFromChild);
             break;
         }
         setSwipeDirection(undefined);
       });
     },
   });
-
   const cardStyle = {
     transform: position.getTranslateTransform(),
   };
-
   return (
     <Animated.View
       {...panResponder.panHandlers}
@@ -119,7 +129,8 @@ const Swappable = function ({
       testID="swappable"
       className={className}
     >
-      {children}
+      {React.isValidElement(children) &&
+        React.cloneElement(children as ReactElement, { ref: childRef })}
     </Animated.View>
   );
 };
