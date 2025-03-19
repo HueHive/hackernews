@@ -50,21 +50,21 @@ const getPositionBaseOnSwipeDirection = function (
       return { x: gesture.dx, y: gesture.dy };
   }
 };
-export interface SwappableProps {
+export interface SwappableProps<T> {
   children: ReactNode;
-  onLeftSwipe: Function;
-  onRightSwipe: Function;
-  onTopSwipe: Function;
-  onBottomSwipe: Function;
+  onLeftSwipe: (data: T) => void;
+  onRightSwipe: (data: T) => void;
+  onTopSwipe: (data: T) => void;
+  onBottomSwipe: (data: T) => void;
   style?: StyleProp<ViewStyle>;
   className?: string;
 }
 
-type ChildRefType = {
-  getData: () => any;
+type ChildRefType<T> = {
+  getData: () => T;
 };
 
-const Swappable = function ({
+const Swappable = function <T>({
   children,
   onLeftSwipe,
   onRightSwipe,
@@ -72,8 +72,8 @@ const Swappable = function ({
   onBottomSwipe,
   style,
   className,
-}: SwappableProps) {
-  const childRef = useRef<ChildRefType>();
+}: SwappableProps<T | undefined>) {
+  const childRef = useRef<ChildRefType<T>>();
   const [swipeDirection, setSwipeDirection] = useState<
     'right' | 'left' | 'top' | 'bottom' | undefined
   >();
@@ -85,8 +85,8 @@ const Swappable = function ({
         (Math.abs(gesture.dx) > 20 || Math.abs(gesture.dy) > 20) &&
         swipeDirection === undefined
       ) {
-        if (gesture.dx < -20) setSwipeDirection('left');
-        if (gesture.dx > 20) setSwipeDirection('right');
+        if (gesture.dx < -20) setSwipeDirection('right');
+        if (gesture.dx > 20) setSwipeDirection('left');
         if (gesture.dy < -20) setSwipeDirection('top');
         if (gesture.dy > 20) setSwipeDirection('bottom');
       }
@@ -100,18 +100,18 @@ const Swappable = function ({
         duration: 500,
         useNativeDriver: true,
       }).start(() => {
+        const dataFromChild = childRef.current?.getData();
         switch (swipeDirection) {
           case 'top':
-            onTopSwipe();
+            onTopSwipe(dataFromChild);
             break;
           case 'bottom':
-            onBottomSwipe();
+            onBottomSwipe(dataFromChild);
             break;
           case 'left':
-            onLeftSwipe();
+            onLeftSwipe(dataFromChild);
             break;
           case 'right':
-            const dataFromChild = childRef.current?.getData();
             onRightSwipe(dataFromChild);
             break;
         }
