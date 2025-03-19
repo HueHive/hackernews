@@ -31,8 +31,15 @@ export default function Home() {
 
   return (
     <Swappable<News>
-      onLeftSwipe={() => {
-        console.log('on swipe left');
+      onLeftSwipe={(childData) => {
+        if (!childData) {
+          ToastAndroid.show('Something went wrong', ToastAndroid.SHORT);
+          return;
+        }
+        router.push({
+          pathname: '/comments',
+          params: { newsId: childData.id },
+        });
       }}
       onRightSwipe={(childData) => {
         if (!childData) {
