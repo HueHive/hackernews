@@ -9,6 +9,8 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { type News } from '@/types';
+
 const dummyStory = `In a quiet village, nestled between rolling 
 green hills, lived a little boy named Arjun. One day, 
 his grandmother handed him a small, shiny seed and said,
@@ -27,7 +29,7 @@ const NewsCard = forwardRef((props: NewsCardProps, ref) => {
     isLoading,
     error,
     data: news,
-  } = useQuery({
+  } = useQuery<News>({
     queryKey: [newsId],
     queryFn: () =>
       fetch(
@@ -52,19 +54,21 @@ const NewsCard = forwardRef((props: NewsCardProps, ref) => {
   }
 
   return (
-    <SafeAreaView className={`flex flex-1`}>
+    <SafeAreaView
+      className={`flex flex-1 border border-white/10 bg-white/5 backdrop-blur-sm`}
+    >
       <Image
         source={{ uri: 'https://placehold.co/300x200/png' }}
         className={`h-1/3 w-full`}
       />
       <View className={'flex flex-1 p-4'}>
-        <Text className="text-xl">{news.title || 'Test title '} </Text>
+        <Text className="text-xl">{news?.title || 'Test title '} </Text>
         <View>
-          <Text>{news.story || dummyStory}</Text>
+          <Text>{dummyStory}</Text>
         </View>
         <View className="flex flex-row items-center">
           <Text className="text-sm font-light">Create by: </Text>
-          <Text className="text">{news.by}</Text>
+          <Text className="text">{news?.by}</Text>
           <TouchableOpacity onPress={() => {}}></TouchableOpacity>
           <Text>{'100'}</Text>
         </View>

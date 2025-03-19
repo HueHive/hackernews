@@ -1,10 +1,11 @@
 import { useQuery } from '@tanstack/react-query';
 import { router } from 'expo-router';
 import React, { useState } from 'react';
-import { ActivityIndicator, Text, View } from 'react-native';
+import { ActivityIndicator, Text, ToastAndroid, View } from 'react-native';
 
 import NewsCard from '@/components/home/news-card';
 import Swappable from '@/components/swappable/swappable';
+import { type News } from '@/types';
 
 export default function Home() {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -29,9 +30,15 @@ export default function Home() {
   }
 
   return (
-    <Swappable
-      onLeftSwipe={() => {}}
-      onRightSwipe={(childData: any) => {
+    <Swappable<News>
+      onLeftSwipe={() => {
+        console.log('on swipe left');
+      }}
+      onRightSwipe={(childData) => {
+        if (!childData) {
+          ToastAndroid.show('Something went wrong', ToastAndroid.SHORT);
+          return;
+        }
         router.push({
           pathname: '/news',
           params: { newsUrl: childData.url },
