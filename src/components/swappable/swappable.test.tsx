@@ -21,7 +21,6 @@ describe('Swappable component ', () => {
         onTopSwipe={onTopSwipe}
         onBottomSwipe={onBottomSwipe}
       >
-        {' '}
         <View>
           <Text> Hey init text</Text>
         </View>
