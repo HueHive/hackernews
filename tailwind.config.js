@@ -6,6 +6,9 @@ module.exports = {
   content: ['./src/**/*.{js,jsx,ts,tsx}'],
   presets: [require('nativewind/preset')],
   darkMode: 'class',
+  fontFamily: {
+    roboto: ['Roboto', 'sans-serif'],
+  },
   theme: {
     extend: {
       fontFamily: {
