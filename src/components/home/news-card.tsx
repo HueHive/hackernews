@@ -1,6 +1,12 @@
 import { useQuery } from '@tanstack/react-query';
 import React, { forwardRef, useImperativeHandle } from 'react';
-import { Image, Text, TouchableOpacity, View } from 'react-native';
+import {
+  Image,
+  Text,
+  ToastAndroid,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { type News } from '@/types';
@@ -57,11 +63,30 @@ const CardContent = ({ hackerNewsData, newsData, isLoadingNewApi }: any) => (
           <Text>{newsData.summary || 'No summary available.'}</Text>
         )}
       </View>
-      <View className="mt-auto flex flex-row items-center">
-        <Text className="text-sm font-light">Created by: </Text>
-        <Text className="text">{hackerNewsData?.by}</Text>
-        <TouchableOpacity onPress={() => {}}></TouchableOpacity>
-        <Text>{'100'}</Text>
+      <View className="mt-auto flex flex-row items-center justify-between">
+        <View className="flex flex-row items-center">
+          <Text className="text-sm font-light">Created by: </Text>
+          <Text className="text">{hackerNewsData?.by}</Text>
+        </View>
+
+        <View className="flex flex-row items-center space-x-4">
+          <View className="flex flex-row items-center">
+            <Text className="mr-1  text-sm font-light ">Upvotes: </Text>
+            <Text>{hackerNewsData?.score || 0}</Text>
+          </View>
+          <TouchableOpacity
+            onPress={() => {
+              ToastAndroid.show(
+                'Swipe left to view comments',
+                ToastAndroid.SHORT,
+              );
+            }}
+            className="flex flex-row items-center"
+          >
+            <Text className="mx-1 text-sm font-light"> Comments: </Text>
+            <Text>{hackerNewsData?.descendants || 0}</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </View>
   </>
