@@ -1,15 +1,20 @@
 import { useQuery } from '@tanstack/react-query';
 import { router } from 'expo-router';
 import React, { useState } from 'react';
-import { ActivityIndicator, Text, ToastAndroid, View } from 'react-native';
+import { Text, ToastAndroid, View } from 'react-native';
 
 import NewsCard from '@/components/home/news-card';
+import ShimmerLoader from '@/components/home/shimmer';
 import Swappable from '@/components/swappable/swappable';
 import { type News } from '@/types';
 
 export default function Home() {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const { data: topStories = [], isLoading } = useQuery({
+  const {
+    data: topStories = [],
+    isLoading,
+    error,
+  } = useQuery({
     queryKey: ['topStories'],
     queryFn: () =>
       fetch(
@@ -18,8 +23,9 @@ export default function Home() {
   });
 
   if (isLoading) {
-    return <ActivityIndicator size={'large'}></ActivityIndicator>;
+    return <ShimmerLoader />;
   }
+  console.log(error);
 
   if (topStories.length === 0) {
     return (
@@ -57,7 +63,7 @@ export default function Home() {
       onBottomSwipe={() => {
         setCurrentIndex(Math.max(currentIndex - 1, 0));
       }}
-      className="flex-1"
+      className="flex-1 p-2"
     >
       <NewsCard newsId={topStories[currentIndex]} />
     </Swappable>
