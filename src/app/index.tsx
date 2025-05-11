@@ -54,7 +54,7 @@ export default function Home() {
         }
         router.push({
           pathname: '/news',
-          params: { newsUrl: childData.url },
+          params: { newsUrl: childData.article_url },
         });
       }}
       onTopSwipe={() => {
