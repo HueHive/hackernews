@@ -115,7 +115,7 @@ const NewsCard = forwardRef((props: NewsCardProps, ref) => {
     queryFn: () => {
       if (!hackerNewsData) return null;
       return fetch(
-        `https://huehive.co/api/v1/hn_article_summaries/summarize?hn_id=${hackerNewsData.id}&article_url=${hackerNewsData.article_url}&title=${hackerNewsData.title}&author=${hackerNewsData.by}&score=${hackerNewsData.score}`,
+        `https://huehive.co/api/v1/hn_article_summaries/summarize?hn_id=${hackerNewsData.id}&article_url=${hackerNewsData.url}&title=${hackerNewsData.title}&author=${hackerNewsData.by}&score=${hackerNewsData.score}`,
       ).then((res) => res.json());
     },
   });
