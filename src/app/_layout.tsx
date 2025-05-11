@@ -30,9 +30,7 @@ SplashScreen.setOptions({
 export default function RootLayout() {
   return (
     <Providers>
-      <Stack screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="news"></Stack.Screen>
-      </Stack>
+      <Stack></Stack>
     </Providers>
   );
 }

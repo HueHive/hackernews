@@ -1,4 +1,4 @@
-package com.obytes.development
+package com.obytes.staging
 import expo.modules.splashscreen.SplashScreenManager
 
 import android.os.Build

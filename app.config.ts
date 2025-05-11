@@ -26,7 +26,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   description: `${Env.NAME} Mobile App`,
   owner: Env.EXPO_ACCOUNT_OWNER,
   scheme: Env.SCHEME,
-  slug: 'obytesapp',
+  slug: 'hnquickread',
   version: Env.VERSION.toString(),
   orientation: 'portrait',
   icon: './assets/icon.png',
@@ -36,10 +36,10 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     fallbackToCacheTimeout: 0,
   },
   assetBundlePatterns: ['**/*'],
-  ios: {
-    supportsTablet: true,
-    bundleIdentifier: Env.BUNDLE_ID,
-  },
+  // ios: {
+  //   supportsTablet: true,
+  //   bundleIdentifier: Env.BUNDLE_ID,
+  // },
   experiments: {
     typedRoutes: true,
   },
@@ -72,7 +72,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     'expo-localization',
     'expo-router',
     ['app-icon-badge', appIconBadgeConfig],
-    ["react-native-edge-to-edge"]
+    ['react-native-edge-to-edge'],
   ],
   extra: {
     ...ClientEnv,

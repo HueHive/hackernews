@@ -28,7 +28,7 @@
         <key>CFBundleURLSchemes</key>
         <array>
           <string>obytesApp</string>
-          <string>com.obytes.development</string>
+          <string>com.obytes.staging</string>
         </array>
       </dict>
       <dict>
