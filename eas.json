@@ -68,6 +68,11 @@
     }
   },
   "submit": {
-    "production": {}
+    "production": {
+      "android": {
+        "serviceAccountKeyPath": "./hn-quick-read-88f904d08d9f.json",
+        "track": "internal"
+      }
+    }
   }
 }
