@@ -20,7 +20,6 @@ hydrateAuth();
 loadSelectedTheme();
 
 export default function RootLayout() {
-  console.log('root layout called');
   return (
     <Providers>
       <Stack></Stack>
@@ -31,10 +30,7 @@ export default function RootLayout() {
 function Providers({ children }: { children: React.ReactNode }) {
   const theme = useThemeConfig();
   return (
-    <GestureHandlerRootView
-      style={styles.container}
-      className={theme.dark ? `dark` : undefined}
-    >
+    <GestureHandlerRootView style={styles.container} className={'light'}>
       <KeyboardProvider>
         <ThemeProvider value={theme}>
           <APIProvider>
