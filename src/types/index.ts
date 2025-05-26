@@ -7,5 +7,6 @@ export interface News {
   time: number;
   title: string;
   type: string;
+  article_url: string;
   url: string;
 }

@@ -29,17 +29,17 @@ require('dotenv').config({
  * Such as: bundle id, package name, app name.
  *
  * You can add them to the .env file but we think it's better to keep them here as as we use prefix to generate this values based on the APP_ENV
- * for example: if the APP_ENV is staging, the bundle id will be com.obytes.staging
+ * for example: if the APP_ENV is staging, the bundle id will be com.hn.quick.read
  */
 
 // TODO: Replace these values with your own
 
-const BUNDLE_ID = 'com.obytes'; // ios bundle id
-const PACKAGE = 'com.obytes'; // android package name
-const NAME = 'ObytesApp'; // app name
-const EXPO_ACCOUNT_OWNER = 'obytes'; // expo account owner
-const EAS_PROJECT_ID = 'c3e1075b-6fe7-4686-aa49-35b46a229044'; // eas project id
-const SCHEME = 'obytesApp'; // app scheme
+const BUNDLE_ID = 'com.huehive.hnquickread'; // ios bundle id
+const PACKAGE = 'com.huehive.hnquickread'; // android package name
+const NAME = 'HNQuickRead'; // app name
+const EXPO_ACCOUNT_OWNER = 'bhujoshi'; // expo account owner
+const EAS_PROJECT_ID = 'f2aba25e-25c4-4dd6-a6f1-fe96e962b922'; // eas project id
+const SCHEME = 'HNQuickRead'; // app scheme
 
 /**
  * We declare a function withEnvSuffix that will add a suffix to the variable name based on the APP_ENV
@@ -138,10 +138,10 @@ if (parsed.success === false) {
     parsed.error.flatten().fieldErrors,
 
     `\n❌ Missing variables in .env.${APP_ENV} file, Make sure all required variables are defined in the .env.${APP_ENV} file.`,
-    `\n💡 Tip: If you recently updated the .env.${APP_ENV} file and the error still persists, try restarting the server with the -c flag to clear the cache.`
+    `\n💡 Tip: If you recently updated the .env.${APP_ENV} file and the error still persists, try restarting the server with the -c flag to clear the cache.`,
   );
   throw new Error(
-    'Invalid environment variables, Check terminal for more details '
+    'Invalid environment variables, Check terminal for more details ',
   );
 }
 

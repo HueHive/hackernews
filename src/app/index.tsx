@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { router } from 'expo-router';
+import { Stack } from 'expo-router';
 import React, { useState } from 'react';
 import { Text, ToastAndroid, View } from 'react-native';
 
@@ -25,7 +26,6 @@ export default function Home() {
   if (isLoading) {
     return <ShimmerLoader />;
   }
-  console.log(error);
 
   if (topStories.length === 0) {
     return (
@@ -36,36 +36,39 @@ export default function Home() {
   }
 
   return (
-    <Swappable<News>
-      onLeftSwipe={(childData) => {
-        if (!childData) {
-          ToastAndroid.show('Something went wrong', ToastAndroid.SHORT);
-          return;
-        }
-        router.push({
-          pathname: '/comments',
-          params: { newsId: childData.id },
-        });
-      }}
-      onRightSwipe={(childData) => {
-        if (!childData) {
-          ToastAndroid.show('Something went wrong', ToastAndroid.SHORT);
-          return;
-        }
-        router.push({
-          pathname: '/news',
-          params: { newsUrl: childData.url },
-        });
-      }}
-      onTopSwipe={() => {
-        setCurrentIndex(currentIndex + 1);
-      }}
-      onBottomSwipe={() => {
-        setCurrentIndex(Math.max(currentIndex - 1, 0));
-      }}
-      className="flex-1 p-2"
-    >
-      <NewsCard newsId={topStories[currentIndex]} />
-    </Swappable>
+    <>
+      <Stack.Screen options={{ headerShown: false }} />
+      <Swappable<News>
+        onLeftSwipe={(childData) => {
+          if (!childData) {
+            ToastAndroid.show('Something went wrong', ToastAndroid.SHORT);
+            return;
+          }
+          router.push({
+            pathname: '/comments',
+            params: { newsId: childData.id },
+          });
+        }}
+        onRightSwipe={(childData) => {
+          if (!childData) {
+            ToastAndroid.show('Something went wrong', ToastAndroid.SHORT);
+            return;
+          }
+          router.push({
+            pathname: '/news',
+            params: { newsUrl: childData.article_url },
+          });
+        }}
+        onTopSwipe={() => {
+          setCurrentIndex(currentIndex + 1);
+        }}
+        onBottomSwipe={() => {
+          setCurrentIndex(Math.max(currentIndex - 1, 0));
+        }}
+        className="flex-1 p-2"
+      >
+        <NewsCard newsId={topStories[currentIndex]} />
+      </Swappable>
+    </>
   );
 }
