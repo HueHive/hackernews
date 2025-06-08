@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import newsPreloader from '@/lib/preloader';
 import { type News } from '@/types';
 
 import ShimmerLoader, { ShimmerImage, ShimmerSummary } from './shimmer';
@@ -95,47 +96,31 @@ const CardContent = ({ hackerNewsData, newsData, isLoadingNewApi }: any) => (
 const NewsCard = forwardRef((props: NewsCardProps, ref) => {
   const { newsId } = props;
   const {
-    isLoading: isLoadingHackerNews,
-    error: errorHackerNews,
-    data: hackerNewsData,
+    isLoading: isLoading,
+    error: error,
+    data: news,
   } = useQuery<News>({
     queryKey: [newsId],
-    queryFn: () =>
-      fetch(
-        `https://hacker-news.firebaseio.com/v0/item/${newsId}.json?print=pretty`,
-      ).then((res) => res.json()),
-  });
-
-  const {
-    isLoading: isLoadingNewApi,
-    error: errorNewApi,
-    data: newsData,
-  } = useQuery({
-    queryKey: [hackerNewsData],
     queryFn: () => {
-      if (!hackerNewsData) return null;
-      return fetch(
-        `https://huehive.co/api/v1/hn_article_summaries/summarize?hn_id=${hackerNewsData.id}&article_url=${hackerNewsData.url}&title=${hackerNewsData.title}&author=${hackerNewsData.by}&score=${hackerNewsData.score}`,
-      ).then((res) => res.json());
+      return newsPreloader.getNews(newsId);
     },
   });
 
   useImperativeHandle(ref, () => ({
-    getData: () => newsData,
+    getData: () => news,
   }));
 
-  if (isLoadingHackerNews) return <ShimmerLoader />;
-  if (errorHackerNews || errorNewApi)
-    return <ErrorView error={errorHackerNews || errorNewApi} />;
+  if (isLoading) return <ShimmerLoader />;
+  if (error) return <ErrorView error={error} />;
 
   return (
     <SafeAreaView
       className={`flex flex-1 gap-3 rounded-2xl border-2 ${LIST_OF_BORDER_COLORS[generateRandomIndex(LIST_OF_BORDER_COLORS)]}`}
     >
       <CardContent
-        hackerNewsData={hackerNewsData}
-        newsData={newsData}
-        isLoadingNewApi={isLoadingNewApi}
+        hackerNewsData={news}
+        newsData={news}
+        isLoadingNewApi={isLoading}
       />
     </SafeAreaView>
   );
