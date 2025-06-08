@@ -115,7 +115,7 @@ const NewsCard = forwardRef((props: NewsCardProps, ref) => {
 
   return (
     <SafeAreaView
-      className={`flex flex-1 gap-3 rounded-2xl border-2 bg-white ${LIST_OF_BORDER_COLORS[generateRandomIndex(LIST_OF_BORDER_COLORS)]}`}
+      className={`flex flex-1 gap-3 rounded-2xl border-2 ${LIST_OF_BORDER_COLORS[generateRandomIndex(LIST_OF_BORDER_COLORS)]}`}
     >
       <CardContent
         hackerNewsData={news}
