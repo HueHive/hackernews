@@ -1,14 +1,14 @@
 import { useQuery } from '@tanstack/react-query';
 import { router } from 'expo-router';
 import { Stack } from 'expo-router';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Text, ToastAndroid, View } from 'react-native';
 
 import NewsCard from '@/components/home/news-card';
 import ShimmerLoader from '@/components/home/shimmer';
 import Swappable from '@/components/swappable/swappable';
+import newsPreloader from '@/lib/preloader';
 import { type News } from '@/types';
-
 export default function Home() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const {
@@ -22,6 +22,19 @@ export default function Home() {
         'https://hacker-news.firebaseio.com/v0/topstories.json?print=pretty',
       ).then((res) => res.json()),
   });
+
+  useEffect(() => {
+    async function preloadNews() {
+      if (topStories.length > 0) {
+        let index = currentIndex;
+        while (currentIndex < currentIndex + 3) {
+          await newsPreloader.getNews(topStories[index + 1]);
+          index++;
+        }
+      }
+    }
+    preloadNews();
+  }, [currentIndex]);
 
   if (isLoading) {
     return <ShimmerLoader />;
