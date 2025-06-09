@@ -25,7 +25,8 @@ class NewsPreloader {
     const news = await fetch(
       `https://huehive.co/api/v1/hn_article_summaries/summarize?hn_id=${hnNews.id}&article_url=${hnNews.url}&title=${hnNews.title}&author=${hnNews.by}&score=${hnNews.score}`,
     ).then((res) => res.json());
-
+    news.by = hnNews.by;
+    news.descendants = hnNews.descendants;
     return news;
   }
 

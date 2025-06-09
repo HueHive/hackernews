@@ -1,4 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
+import { LinearGradient } from 'expo-linear-gradient';
 import React, { forwardRef, useImperativeHandle } from 'react';
 import {
   Image,
@@ -7,29 +8,59 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
 import newsPreloader from '@/lib/preloader';
 import { type News } from '@/types';
 
 import ShimmerLoader, { ShimmerImage, ShimmerSummary } from './shimmer';
 
-const LIST_OF_BORDER_COLORS = [
-  'border-red-100',
-  'border-orange-100',
-  'border-yellow-100',
-  'border-green-100',
-  'border-blue-100',
-  'border-indigo-100',
-  'border-violet-100',
+interface Gradient{
+  name: string;
+  colors: [string, string];
+  start: {x: number; y: number};
+  end: {x: number; y: number};
+}
+// Step 1: Your gradient config
+const gradients: Gradient[]  = [
+  {
+    name: "Soft Peach",
+    colors: ['#fff5f5', '#ffe4e1'],
+    start: { x: 0, y: 0 },
+    end: { x: 1, y: 1 }
+  },
+  {
+    name: "Gentle Sky",
+    colors: ['#e0f7fa', '#f0ffff'],
+    start: { x: 0, y: 0 },
+    end: { x: 1, y: 0 }
+  },
+  {
+    name: "Pale Rose",
+    colors: ['#fff0f5', '#fdeff9'],
+    start: { x: 0.1, y: 0 },
+    end: { x: 1, y: 1 }
+  },
+  {
+    name: "Mint Cream",
+    colors: ['#f0fff0', '#f5fffa'],
+    start: { x: 0, y: 1 },
+    end: { x: 1, y: 0 }
+  },
+  {
+    name: "Lavender Mist",
+    colors: ['#f5f0ff', '#f0f4ff'],
+    start: { x: 0.2, y: 0 },
+    end: { x: 1, y: 1 }
+  }
 ];
 
-function generateRandomIndex(array: any[]) {
-  if (array.length === 0) {
-    throw new Error('Array cannot be empty');
-  }
-  return Math.floor(Math.random() * array.length);
-}
+// Step 2: Choose a random gradient
+const getRandomGradient = () => {
+  const index = Math.floor(Math.random() * gradients.length);
+  return gradients[index];
+};
+
+
 
 interface NewsCardProps {
   newsId: number;
@@ -43,8 +74,9 @@ const ErrorView = ({ error }: { error: Error | null }) => (
 );
 
 // Extract card content into a separate component
-const CardContent = ({ hackerNewsData, newsData, isLoadingNewApi }: any) => (
-  <>
+const CardContent = ({ hackerNewsData, newsData, isLoadingNewApi }: any) => {
+
+  return <>
     {isLoadingNewApi ? (
       <ShimmerImage />
     ) : (
@@ -55,13 +87,13 @@ const CardContent = ({ hackerNewsData, newsData, isLoadingNewApi }: any) => (
         />
       )
     )}
-    <View className={'flex flex-1 p-4'}>
-      <Text className="text-xl">{hackerNewsData?.title || 'Test title '} </Text>
+    <View className={'flex flex-1 overflow-hidden p-2'}>
+      <Text className="mb-2 text-2xl">{hackerNewsData?.title || 'Test title '} </Text>
       <View>
         {isLoadingNewApi ? (
           <ShimmerSummary />
         ) : (
-          <Text>{newsData.summary || 'No summary available.'}</Text>
+          <Text className={'text-base'}>{newsData.summary || 'No summary available.'}</Text>
         )}
       </View>
       <View className="mt-auto flex flex-row items-center justify-between">
@@ -91,10 +123,11 @@ const CardContent = ({ hackerNewsData, newsData, isLoadingNewApi }: any) => (
       </View>
     </View>
   </>
-);
+};
 
 const NewsCard = forwardRef((props: NewsCardProps, ref) => {
   const { newsId } = props;
+  const randomGradient = getRandomGradient();
   const {
     isLoading: isLoading,
     error: error,
@@ -105,7 +138,6 @@ const NewsCard = forwardRef((props: NewsCardProps, ref) => {
       return newsPreloader.getNews(newsId);
     },
   });
-
   useImperativeHandle(ref, () => ({
     getData: () => news,
   }));
@@ -114,15 +146,17 @@ const NewsCard = forwardRef((props: NewsCardProps, ref) => {
   if (error) return <ErrorView error={error} />;
 
   return (
-    <SafeAreaView
-      className={`flex flex-1 gap-3 rounded-2xl border-2 ${LIST_OF_BORDER_COLORS[generateRandomIndex(LIST_OF_BORDER_COLORS)]}`}
+    <LinearGradient colors={randomGradient.colors}
+                    start={randomGradient.start}
+                    end={randomGradient.end}
+      className={`flex flex-1 gap-3 rounded-2xl `}
     >
       <CardContent
         hackerNewsData={news}
         newsData={news}
         isLoadingNewApi={isLoading}
       />
-    </SafeAreaView>
+    </LinearGradient>
   );
 });
 

@@ -27,14 +27,14 @@ export default function Home() {
     async function preloadNews() {
       if (topStories.length > 0) {
         let index = currentIndex;
-        while (currentIndex < currentIndex + 3) {
+        while (index < currentIndex + 3) {
           await newsPreloader.getNews(topStories[index + 1]);
           index++;
         }
       }
     }
     preloadNews();
-  }, [currentIndex]);
+  }, [currentIndex, topStories]);
 
   if (isLoading) {
     return <ShimmerLoader />;
@@ -78,9 +78,9 @@ export default function Home() {
         onBottomSwipe={() => {
           setCurrentIndex(Math.max(currentIndex - 1, 0));
         }}
-        className="flex-1 p-2"
+        className=" flex-1"
       >
-        <NewsCard newsId={topStories[currentIndex]} />
+        <NewsCard  newsId={topStories[currentIndex]} />
       </Swappable>
     </>
   );
