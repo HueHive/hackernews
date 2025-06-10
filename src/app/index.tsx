@@ -9,6 +9,7 @@ import ShimmerLoader from '@/components/home/shimmer';
 import Swappable from '@/components/swappable/swappable';
 import newsPreloader from '@/lib/preloader';
 import { type News } from '@/types';
+
 export default function Home() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const {
@@ -52,6 +53,8 @@ export default function Home() {
   }
 
   return (
+    <>
+      <Stack.Screen options={{ headerShown: false }} />
       <Swappable<News>
         onLeftSwipe={(childData) => {
           if (!childData) {
@@ -79,10 +82,12 @@ export default function Home() {
         onBottomSwipe={() => {
           setCurrentIndex(Math.max(currentIndex - 1, 0));
         }}
-        className=" flex-1"
+        className="flex-1 p-2"
       >
         <NewsCard  newsId={topStories[currentIndex]} />
       </Swappable>
+    </>
+
 
   );
 }

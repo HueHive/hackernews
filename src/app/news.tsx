@@ -1,4 +1,4 @@
-import { useLocalSearchParams } from 'expo-router';
+import { Stack, useLocalSearchParams } from 'expo-router';
 import React from 'react';
 import { ActivityIndicator, StyleSheet, View } from 'react-native';
 import { WebView } from 'react-native-webview';
@@ -12,6 +12,7 @@ export default function News() {
 
   return (
     <View style={{ flex: 1 }}>
+      <Stack.Screen options={{ headerTitle: 'News' }} />
       <WebView
         source={{ uri: newsUrl as string }}
         startInLoadingState={true}

@@ -2,11 +2,11 @@ import { useQuery } from '@tanstack/react-query';
 import { LinearGradient } from 'expo-linear-gradient';
 import React, { forwardRef, useImperativeHandle } from 'react';
 import {
-  Image,
+  Image, Platform,
   Text,
   ToastAndroid,
   TouchableOpacity,
-  View,
+  View
 } from 'react-native';
 
 import newsPreloader from '@/lib/preloader';
@@ -24,31 +24,31 @@ interface Gradient{
 const gradients: Gradient[]  = [
   {
     name: "Soft Peach",
-    colors: ['#fff5f5', '#ffe4e1'],
+    colors: ['#ffffff', '#FFE3F6'],
     start: { x: 0, y: 0 },
     end: { x: 1, y: 1 }
   },
   {
     name: "Gentle Sky",
-    colors: ['#e0f7fa', '#f0ffff'],
+    colors: ['#ffffff', '#E6E3FF'],
     start: { x: 0, y: 0 },
     end: { x: 1, y: 0 }
   },
   {
     name: "Pale Rose",
-    colors: ['#fff0f5', '#fdeff9'],
+    colors: ['#ffffff', '#E4E3FF'],
     start: { x: 0.1, y: 0 },
     end: { x: 1, y: 1 }
   },
   {
     name: "Mint Cream",
-    colors: ['#f0fff0', '#f5fffa'],
+    colors: ['#ffffff', '#FFE6E3'],
     start: { x: 0, y: 1 },
     end: { x: 1, y: 0 }
   },
   {
     name: "Lavender Mist",
-    colors: ['#f5f0ff', '#f0f4ff'],
+    colors: ['#ffffff', '#E3FFEF'],
     start: { x: 0.2, y: 0 },
     end: { x: 1, y: 1 }
   }
@@ -144,12 +144,14 @@ const NewsCard = forwardRef((props: NewsCardProps, ref) => {
 
   if (isLoading) return <ShimmerLoader />;
   if (error) return <ErrorView error={error} />;
+  console.log({news})
 
   return (
     <LinearGradient colors={randomGradient.colors}
                     start={randomGradient.start}
                     end={randomGradient.end}
-      className={`flex flex-1 gap-3 rounded-2xl `}
+                    className={`flex flex-1 gap-3 rounded-2xl `}
+                    style={shadowStyle}
     >
       <CardContent
         hackerNewsData={news}
@@ -159,5 +161,19 @@ const NewsCard = forwardRef((props: NewsCardProps, ref) => {
     </LinearGradient>
   );
 });
+
+const shadowStyle = {
+  ...Platform.select({
+    ios: {
+      shadowColor: '#000',
+      shadowOffset: { width: -1, height: 3 },
+      shadowOpacity: 0.75,
+      shadowRadius: 5,
+    },
+    android: {
+      elevation: 4,
+    },
+  }),
+};
 
 export default NewsCard;
