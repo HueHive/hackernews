@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { router } from 'expo-router';
 import { Stack } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import { Text, ToastAndroid, View} from 'react-native';
+import { Text, ToastAndroid, View } from 'react-native';
 
 import NewsCard from '@/components/home/news-card';
 import ShimmerLoader from '@/components/home/shimmer';
@@ -38,10 +38,12 @@ export default function Home() {
   }, [currentIndex, topStories]);
 
   if (isLoading) {
-    return <>
-      <Stack.Screen options={{ headerShown: false }} />
-      <ShimmerLoader />;
-    </>
+    return (
+      <>
+        <Stack.Screen options={{ headerShown: false }} />
+        <ShimmerLoader />;
+      </>
+    );
   }
 
   if (topStories.length === 0) {
@@ -84,10 +86,8 @@ export default function Home() {
         }}
         className="flex-1 p-2"
       >
-        <NewsCard  newsId={topStories[currentIndex]} />
+        <NewsCard newsId={topStories[currentIndex]} />
       </Swappable>
     </>
-
-
   );
 }
