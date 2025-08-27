@@ -1,6 +1,11 @@
 import { useQuery } from '@tanstack/react-query';
 import { LinearGradient } from 'expo-linear-gradient';
-import React, { forwardRef, useImperativeHandle } from 'react';
+import React, {
+  forwardRef,
+  useEffect,
+  useImperativeHandle,
+  useState,
+} from 'react';
 import {
   Image,
   Platform,
@@ -139,7 +144,12 @@ const CardContent = ({
 
 const NewsCard = forwardRef((props: NewsCardProps, ref) => {
   const { newsId } = props;
-  const randomGradient = getRandomGradient();
+  const [randomGradient, setRandomGradient] = useState(getRandomGradient());
+
+  useEffect(() => {
+    setRandomGradient(getRandomGradient());
+  }, [newsId]);
+
   const {
     isLoading: isLoading,
     error: error,
