@@ -1,4 +1,4 @@
-import { useLocalSearchParams } from 'expo-router';
+import { Stack, useLocalSearchParams } from 'expo-router';
 import React from 'react';
 import { ActivityIndicator, StyleSheet, View } from 'react-native';
 import { WebView } from 'react-native-webview';
@@ -14,6 +14,7 @@ export default function Comments() {
 
   return (
     <View style={{ flex: 1 }}>
+      <Stack.Screen options={{ headerTitle: 'Comments' }} />
       <WebView
         source={{ uri: commentsUrl }}
         startInLoadingState={true}

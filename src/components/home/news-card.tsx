@@ -1,8 +1,14 @@
 import { useQuery } from '@tanstack/react-query';
 import { LinearGradient } from 'expo-linear-gradient';
-import React, { forwardRef, useImperativeHandle } from 'react';
+import React, {
+  forwardRef,
+  useEffect,
+  useImperativeHandle,
+  useState,
+} from 'react';
 import {
   Image,
+  Platform,
   Text,
   ToastAndroid,
   TouchableOpacity,
@@ -14,44 +20,44 @@ import { type News } from '@/types';
 
 import ShimmerLoader, { ShimmerImage, ShimmerSummary } from './shimmer';
 
-interface Gradient{
-  name: string;
+interface Gradient {
+  placeholderUri: string;
   colors: [string, string];
-  start: {x: number; y: number};
-  end: {x: number; y: number};
+  start: { x: number; y: number };
+  end: { x: number; y: number };
 }
 // Step 1: Your gradient config
-const gradients: Gradient[]  = [
+const gradients: Gradient[] = [
   {
-    name: "Soft Peach",
-    colors: ['#fff5f5', '#ffe4e1'],
+    placeholderUri: require('../../../assets/placeholders/soft_peach.png'),
+    colors: ['#ffffff', '#FFE3F6'],
     start: { x: 0, y: 0 },
-    end: { x: 1, y: 1 }
+    end: { x: 1, y: 1 },
   },
   {
-    name: "Gentle Sky",
-    colors: ['#e0f7fa', '#f0ffff'],
+    placeholderUri: require('../../../assets/placeholders/gentle_sky.png'),
+    colors: ['#ffffff', '#E6E3FF'],
     start: { x: 0, y: 0 },
-    end: { x: 1, y: 0 }
+    end: { x: 1, y: 0 },
   },
   {
-    name: "Pale Rose",
-    colors: ['#fff0f5', '#fdeff9'],
+    placeholderUri: require('../../../assets/placeholders/aqua_breeze.png'),
+    colors: ['#ffffff', '#E4E3FF'],
     start: { x: 0.1, y: 0 },
-    end: { x: 1, y: 1 }
+    end: { x: 1, y: 1 },
   },
   {
-    name: "Mint Cream",
-    colors: ['#f0fff0', '#f5fffa'],
+    placeholderUri: require('../../../assets/placeholders/mint_cream.png'),
+    colors: ['#ffffff', '#FFE6E3'],
     start: { x: 0, y: 1 },
-    end: { x: 1, y: 0 }
+    end: { x: 1, y: 0 },
   },
   {
-    name: "Lavender Mist",
-    colors: ['#f5f0ff', '#f0f4ff'],
+    placeholderUri: require('../../../assets/placeholders/levender_mist.png'),
+    colors: ['#ffffff', '#E3FFEF'],
     start: { x: 0.2, y: 0 },
-    end: { x: 1, y: 1 }
-  }
+    end: { x: 1, y: 1 },
+  },
 ];
 
 // Step 2: Choose a random gradient
@@ -59,8 +65,6 @@ const getRandomGradient = () => {
   const index = Math.floor(Math.random() * gradients.length);
   return gradients[index];
 };
-
-
 
 interface NewsCardProps {
   newsId: number;
@@ -74,60 +78,78 @@ const ErrorView = ({ error }: { error: Error | null }) => (
 );
 
 // Extract card content into a separate component
-const CardContent = ({ hackerNewsData, newsData, isLoadingNewApi }: any) => {
-
-  return <>
-    {isLoadingNewApi ? (
-      <ShimmerImage />
-    ) : (
-      newsData.image_url && (
+const CardContent = ({
+  hackerNewsData,
+  newsData,
+  isLoadingNewApi,
+  placeholderUri,
+}: any) => {
+  if (newsData.image_url === 'https://example.com/default-article-image.jpg') {
+    newsData.image_url = null;
+  }
+  return (
+    <>
+      {isLoadingNewApi ? (
+        <ShimmerImage />
+      ) : newsData.image_url ? (
         <Image
           className="h-1/3 w-full rounded-t-2xl"
           source={{ uri: newsData.image_url }}
         />
-      )
-    )}
-    <View className={'flex flex-1 overflow-hidden p-2'}>
-      <Text className="mb-2 text-2xl">{hackerNewsData?.title || 'Test title '} </Text>
-      <View>
-        {isLoadingNewApi ? (
-          <ShimmerSummary />
-        ) : (
-          <Text className={'text-base'}>{newsData.summary || 'No summary available.'}</Text>
-        )}
-      </View>
-      <View className="mt-auto flex flex-row items-center justify-between">
-        <View className="flex flex-row items-center">
-          <Text className="text-sm font-light">Created by: </Text>
-          <Text className="text">{hackerNewsData?.by}</Text>
+      ) : (
+        <Image className="h-1/3 w-full rounded-t-2xl" source={placeholderUri} />
+      )}
+      <View className={'flex flex-1 overflow-hidden p-2'}>
+        <Text className="mb-2 text-2xl">
+          {hackerNewsData?.title || 'Test title '}{' '}
+        </Text>
+        <View>
+          {isLoadingNewApi ? (
+            <ShimmerSummary />
+          ) : (
+            <Text className={'text-base'}>
+              {newsData.summary || 'No summary available.'}
+            </Text>
+          )}
         </View>
-
-        <View className="flex flex-row items-center space-x-4">
+        <View className="mt-auto flex flex-row items-center justify-between">
           <View className="flex flex-row items-center">
-            <Text className="mr-1  text-sm font-light ">Upvotes: </Text>
-            <Text>{hackerNewsData?.score || 0}</Text>
+            <Text className="text-sm font-light">Created by: </Text>
+            <Text className="text">{hackerNewsData?.by}</Text>
           </View>
-          <TouchableOpacity
-            onPress={() => {
-              ToastAndroid.show(
-                'Swipe left to view comments',
-                ToastAndroid.SHORT,
-              );
-            }}
-            className="flex flex-row items-center"
-          >
-            <Text className="mx-1 text-sm font-light"> Comments: </Text>
-            <Text>{hackerNewsData?.descendants || 0}</Text>
-          </TouchableOpacity>
+
+          <View className="flex flex-row items-center space-x-4">
+            <View className="flex flex-row items-center">
+              <Text className="mr-1  text-sm font-light ">Upvotes: </Text>
+              <Text>{hackerNewsData?.score || 0}</Text>
+            </View>
+            <TouchableOpacity
+              onPress={() => {
+                ToastAndroid.show(
+                  'Swipe left to view comments',
+                  ToastAndroid.SHORT,
+                );
+              }}
+              className="flex flex-row items-center"
+            >
+              <Text className="mx-1 text-sm font-light"> Comments: </Text>
+              <Text>{hackerNewsData?.descendants || 0}</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
-    </View>
-  </>
+    </>
+  );
 };
 
 const NewsCard = forwardRef((props: NewsCardProps, ref) => {
   const { newsId } = props;
-  const randomGradient = getRandomGradient();
+  const [randomGradient, setRandomGradient] = useState(getRandomGradient());
+
+  useEffect(() => {
+    setRandomGradient(getRandomGradient());
+  }, [newsId]);
+
   const {
     isLoading: isLoading,
     error: error,
@@ -146,18 +168,35 @@ const NewsCard = forwardRef((props: NewsCardProps, ref) => {
   if (error) return <ErrorView error={error} />;
 
   return (
-    <LinearGradient colors={randomGradient.colors}
-                    start={randomGradient.start}
-                    end={randomGradient.end}
+    <LinearGradient
+      colors={randomGradient.colors}
+      start={randomGradient.start}
+      end={randomGradient.end}
       className={`flex flex-1 gap-3 rounded-2xl `}
+      style={shadowStyle}
     >
       <CardContent
         hackerNewsData={news}
         newsData={news}
         isLoadingNewApi={isLoading}
+        placeholderUri={randomGradient.placeholderUri}
       />
     </LinearGradient>
   );
 });
+
+const shadowStyle = {
+  ...Platform.select({
+    ios: {
+      shadowColor: '#000',
+      shadowOffset: { width: -1, height: 3 },
+      shadowOpacity: 0.75,
+      shadowRadius: 5,
+    },
+    android: {
+      elevation: 4,
+    },
+  }),
+};
 
 export default NewsCard;
